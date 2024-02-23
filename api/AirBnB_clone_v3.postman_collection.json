@@ -1,0 +1,507 @@
+{
+	"variables": [],
+	"info": {
+		"name": "AirBnB_clone_v3",
+		"_postman_id": "b2c301e9-5d4d-0d22-a907-67aa70e95c72",
+		"description": "This is a postman template for testing all of the endpoints.\n\nReplace placeholders like <state_id> with actual data.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "States",
+			"description": "",
+			"item": [
+				{
+					"name": "Gets All States",
+					"request": {
+						"url": "localhost:5000/api/v1/states",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get the State by <state_id>",
+					"request": {
+						"url": "localhost:5000/api/v1/states/<state_id>",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create the State",
+					"request": {
+						"url": "localhost:5000/api/v1/states/",
+						"method": "POST",
+						"header": [
+							{
+								"description": "",
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bobby's World\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Updates the State",
+					"request": {
+						"url": "localhost:5000/api/v1/states/<state_id>",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"Bobby's Universe\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes the State",
+					"request": {
+						"url": "localhost:5000/api/v1/states/<state_id>",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"description": "",
+			"item": [
+				{
+					"name": "Gets All Users",
+					"request": {
+						"url": "localhost:5000/api/v1/users",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get the User by <user_id>",
+					"request": {
+						"url": "localhost:5000/api/v1/users/<user_id>",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Creates the User",
+					"request": {
+						"url": "localhost:5000/api/v1/users/",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\"      : \"bobby@yang.com\",\n\t\"first_name\" : \"Bobby\",\n\t\"last_name\"  : \"Yang\",\n\t\"password\"   : \"strongpassword\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Updates the User",
+					"request": {
+						"url": "localhost:5000/api/v1/users/<user_id>",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\" : \"Gaoqing\",\n\t\"last_name\"  : \"Yang\",\n\t\"email\"      : \"122@holbertonschool.com\",\n\t\"password\"   : \"Strong_Password\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes the User",
+					"request": {
+						"url": "localhost:5000/api/v1/users/<user_id>",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Places",
+			"description": "",
+			"item": [
+				{
+					"name": "Gets All the Places by City",
+					"request": {
+						"url": "localhost:5000/api/v1/cities/<city_id>/places",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Place the by <place_id>",
+					"request": {
+						"url": "localhost:5000/api/v1/places/<place_id>",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Creates the Place",
+					"request": {
+						"url": "localhost:5000/api/v1/cities/<city_id>/places",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user_id\" : \"31599588-39d3-48bd-84e5-b929b7eaf7cd\",\n\t\"name\"    : \"2907 Harrison St\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Updates the Place",
+					"request": {
+						"url": "localhost:5000/api/v1/places/<place_id>",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"Bobby's House\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes the Place",
+					"request": {
+						"url": "localhost:5000/api/v1/places/<place_id>",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"description": "",
+			"item": [
+				{
+					"name": "Get All the Reviews by Place",
+					"request": {
+						"url": "localhost:5000/api/v1/places/<place_id>/reviews",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Review by <review_id>",
+					"request": {
+						"url": "localhost:5000/api/v1/reviews/<review_id>",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Creates a Review",
+					"request": {
+						"url": "localhost:5000/api/v1/places/<place_id>/reviews",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user_id\" : \"9e7b2291-3bff-43b9-9241-8ff685e7a6dd\",\n\t\"text\"    : \"Alan and Bobby are the best!\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Updates a Review",
+					"request": {
+						"url": "localhost:5000/api/v1/reviews/<review_id>",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\" : \"Actually, hex and linux the dogs are better\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes the Review",
+					"request": {
+						"url": "localhost:5000/api/v1/reviews/<review_id>",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Amenities",
+			"description": "",
+			"item": [
+				{
+					"name": "Gets All the Amenities",
+					"request": {
+						"url": "localhost:5000/api/v1/amenities",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get an Amenity by <amenity_id>",
+					"request": {
+						"url": "localhost:5000/api/v1/amenities/<amenity_id>",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Creates an Amenity",
+					"request": {
+						"url": "localhost:5000/api/v1/amenities/",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"Poop\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Updates the Amenity",
+					"request": {
+						"url": "localhost:5000/api/v1/amenities/<amenity_id>",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"Toilet\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes the Amenity",
+					"request": {
+						"url": "localhost:5000/api/v1/amenities/<amenity_id>",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cities",
+			"description": "",
+			"item": [
+				{
+					"name": "Gets All the Cities by state_id",
+					"request": {
+						"url": "localhost:5000/api/v1/states/<state_id>/cities",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get the City by <city_id>",
+					"request": {
+						"url": "localhost:5000/api/v1/cities/<city_id>",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Creates the City",
+					"request": {
+						"url": "localhost:5000/api/v1/states/<state_id>/cities",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"Eureka\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Updates the City",
+					"request": {
+						"url": "localhost:5000/api/v1/cities/<city_id>",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"San Jose\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes the City",
+					"request": {
+						"url": "localhost:5000/api/v1/cities/<city_id>",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Status",
+			"request": {
+				"url": "localhost:5000/api/v1/status",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Stats",
+			"request": {
+				"url": "localhost:5000/api/v1/stats",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
