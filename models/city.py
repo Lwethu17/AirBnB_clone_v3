@@ -1,39 +1,43 @@
 #!/usr/bin/python3
-"""
-City Class Models Module
-"""
-import os
-from models.base_model import BaseModel, Base
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
 import models
-storage_type = os.environ.get('HBNB_TYPE_STORAGE')
+from models.base_model import BaseModel, Base, Table, Column, String
+from os import getenv
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, backref
+"""
+city module
+the City class inherts from BaseModel, Base
+"""
 
 
 class City(BaseModel, Base):
-    """City class that handles all application cities"""
-    if storage_type == "db":
+    """
+    The City class attribute
+    """
+    if getenv('HBNB_TYPE_STORAGE', 'fs') == 'db':
         __tablename__ = 'cities'
-        name = Column(String(128), nullable=False)
         state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
-        places = relationship('Place', backref='cities', cascade='delete')
+        name = Column(String(128), nullable=False)
+        places = relationship("Place", backref="city",
+                              cascade="all, delete, delete-orphan")
+        __mapper_args__ = {"confirm_deleted_rows": False}
     else:
-        state_id = ''
-        name = ''
+        name = ""
+        state_id = ""
 
-    if storage_type != 'db':
+    def __init__(self, *args, **kwargs):
+        """
+        Initializes from BaseModel
+        """
+        super().__init__(*args, **kwargs)
+
+    if getenv('HBNB_TYPE_STORAGE', 'fs') != 'db':
         @property
         def places(self):
             """
-            gets for places
-            :return: list of places in that city
+            returns all places in a City
             """
-            all_places = models.storage.all("Place")
-
-            result = []
-
-            for obj in all_places.values():
-                if str(obj.city_id) == str(self.id):
-                    result.append(obj)
-
+            all_places = models.storage.all("Place").values()
+            result = [place for place in all_places if
+                      place.city_id == self.id]
             return result

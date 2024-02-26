@@ -1,92 +1,108 @@
 #!/usr/bin/python3
 """
-holda   Place Class from Models Module
+place module
+PlaceAmenity inherts from Base
+            used to link table places and amenities
+        Place inherts from BaseModel and Base
 """
-import os
-from models.base_model import BaseModel, Base
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, Float, ForeignKey,\
-    MetaData, Table, ForeignKey
-from sqlalchemy.orm import backref
 import models
-storage_type = os.environ.get('HBNB_TYPE_STORAGE')
+from models.base_model import BaseModel, Base, Table, Column
+from os import getenv
+from sqlalchemy import ForeignKey, String, Integer, Float
+from sqlalchemy.orm import relationship, backref
 
 
-if os.getenv("HBNB_TYPE_STORAGE") == "db":
-    place_amenity = Table('place_amenity', Base.metadata,
-                          Column('place_id',
-                                 String(60),
-                                 ForeignKey('places.id')),
-                          Column('amenity_id',
-                                 String(60),
-                                 ForeignKey('amenities.id',
-                                            ondelete="CASCADE")))
+# class PlaceAmenity(Base):
+#     """
+#     PlaceAmenity class designed to link table places and table amenities
+#     of the SQLAlchmeny
+#     """
+#     if getenv('HBNB_TYPE_STORAGE', 'fs') == 'db':
+#         __tablename__ = "place_amenity"
+#         place_id = Column(String(60),
+#                           ForeignKey('places.id'),
+#                           primary_key=True, nullable=False)
+#         amenity_id = Column(String(60), ForeignKey('amenities.id'),
+#                             primary_key=True, nullable=False)
+
+
+if getenv('HBNB_TYPE_STORAGE', 'fs') == 'db':
+    place_amenity = Table("place_amenity", Base.metadata,
+                          Column("place_id", String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True, nullable=False),
+                          Column("amenity_id", String(60),
+                                 ForeignKey('amenities.id'),
+                                 primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
-    """Place class handles all the application places"""
-    if storage_type == "db":
-        __tablename__ = 'places'
-        city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
-        user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+    """
+    Place Class attribute
+    """
+    if getenv('HBNB_TYPE_STORAGE', 'fs') == 'db':
+        __tablename__ = "places"
+        city_id = Column(String(60),
+                         ForeignKey('cities.id'),
+                         nullable=False)
+        user_id = Column(String(60),
+                         ForeignKey('users.id'),
+                         nullable=False)
         name = Column(String(128), nullable=False)
         description = Column(String(1024), nullable=True)
-        number_rooms = Column(Integer, nullable=False, default=0)
-        number_bathrooms = Column(Integer, nullable=False, default=0)
-        max_guest = Column(Integer, nullable=False, default=0)
-        price_by_night = Column(Integer, nullable=False, default=0)
+        number_rooms = Column(Integer, default=0, nullable=False)
+        number_bathrooms = Column(Integer, default=0, nullable=False)
+        max_guest = Column(Integer, default=0, nullable=False)
+        price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-
-        amenities = relationship('Amenity', secondary="place_amenity",
-                                 viewonly=False)
-        reviews = relationship('Review', backref='place', cascade='delete')
+        amenities = relationship("Amenity", secondary="place_amenity",
+                                 backref="places")
+        # no view_only=True
+#        place_amenities = relationship("PlaceAmenity", backref="place",
+#                              cascade="all, delete, delete-orphan")
+        reviews = relationship("Review", backref="place",
+                               cascade="all, delete, delete-orphan")
+        __mapper_args__ = {"confirm_deleted_rows": False}
     else:
-        city_id = ''
-        user_id = ''
-        name = ''
-        description = ''
+        city_id = ""
+        user_id = ""
+        name = ""
+        description = ""
         number_rooms = 0
         number_bathrooms = 0
         max_guest = 0
         price_by_night = 0
         latitude = 0.0
         longitude = 0.0
-        amenity_ids = []
+        amenities_id = []
 
-    if storage_type != "db":
-        @property
-        def amenities(self):
-            """
-            amenities getter
-            :return: list of amenitites
-            """
-            amenity_objs = []
+    def __init__(self, *args, **kwargs):
+        """
+        initializes the Place Class instance
+        Inherts from BaseClass
+        """
+        super().__init__(*args, **kwargs)
 
-            for a_id in self.amenity_ids:
-                amenity_objs.append(models.storage.get("Amenity", str(a_id)))
-
-            return amenity_objs
-
-        @amenities.setter
-        def amenities(self, amenity):
-            """
-            ammenities setter
-            :return:
-            """
-            self.amenity_ids.append(amenity.id)
-
+    if getenv('HBNB_TYPE_STORAGE', 'fs') != 'db':
         @property
         def reviews(self):
             """
-            reviews getter
-            :return: list of reviews
+            lists all reviews for a place
             """
-            all_reviews = models.storage.all("Review")
-            place_reviews = []
+            all_reviews = models.storage.all("Review").values()
+            result = [r for r in all_reviews if r.place_id == self.id]
+            return result
 
-            for review in all_reviews.values():
-                if review.place_id == self.id:
-                    place_reviews.append(review)
-
-            return place_reviews
+    if getenv('HBNB_TYPE_STORAGE', 'fs') != 'db':
+        @property
+        def amenities(self):
+            """
+            lists all amenities for a place
+            """
+            result = []
+            for a in self.amenities_id:
+                b = models.storage.get("Amenity", a)
+                if b is not None:
+                    result.append(b)
+            return result

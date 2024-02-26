@@ -1,20 +1,27 @@
 #!/usr/bin/python3
+from models.base_model import BaseModel, Base, Table, Column, String
+from os import getenv
+from sqlalchemy.orm import relationship, backref
 """
-Amenity Class Models Module
+amenity module
+the Amentiry class inherts from BaseModel and Base
 """
-import os
-from models.base_model import BaseModel, Base
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.orm import backref
-storage_type = os.environ.get('HBNB_TYPE_STORAGE')
 
 
 class Amenity(BaseModel, Base):
-    """Amenity class that handles all application amenities"""
-    if storage_type == "db":
+    """
+    The Amenity class
+    """
+    if getenv('HBNB_TYPE_STORAGE', 'fs') == 'db':
         __tablename__ = 'amenities'
         name = Column(String(128), nullable=False)
-        place_amenities = relationship("Place", secondary="place_amenity")
+#        place_amenities = relationship("PlaceAmenity", backref="amenity",
+#                                       cascade="all, delete, delete-orphan")
     else:
-        name = ''
+        name = ""
+
+    def __init__(self, *args, **kwargs):
+        """
+        initializes the class objects.and Inherits attributes from parent
+        """
+        super().__init__(*args, **kwargs)

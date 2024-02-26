@@ -1,117 +1,86 @@
-#!/usr/bin/python3
-"""
-Amenity Class
-"""
 import unittest
-from datetime import datetime
-import models
-import json
 import os
-
-Amenity = models.amenity.Amenity
-BaseModel = models.base_model.BaseModel
-storage_type = os.environ.get('HBNB_TYPE_STORAGE')
+from datetime import datetime
+from models import *
 
 
-class TestAmenityDocs(unittest.TestCase):
-    """Class for testing BaseModel docs"""
+class Test_AmenityModel(unittest.TestCase):
+    """
+    Test the amenity model class
+    """
 
-    @classmethod
-    def setUpClass(cls):
-        print('\n\n.................................')
-        print('..... Testing Documentation .....')
-        print('........   Amenity  Class   ........')
-        print('.................................\n\n')
+    def test_save(self):
+        """test saving and retrieving an amenity"""
+        test_args = {'updated_at': datetime(2017, 2, 12, 00, 31, 53, 331997),
+                     'id': '054',
+                     'created_at': datetime(2017, 2, 12, 00, 31, 53, 331900),
+                     'name': "AMENITY SET UP"}
+        model = Amenity(**test_args)
+        model.save()
+        all_amenities = storage.all("Amenity")
+        self.assertIn(test_args['id'], all_amenities.keys())
+        obj = storage.get("Amenity", test_args['id'])
+        self.assertEqual(obj.name, test_args['name'])
+        self.assertEqual(obj.created_at.hour, test_args['created_at'].hour)
+        self.assertEqual(obj.updated_at.year, test_args['updated_at'].year)
 
-    def test_doc_file(self):
-        """... documentation for the file"""
-        expected = '\nAmenity Class from Models Module\n'
-        actual = models.amenity.__doc__
-        self.assertEqual(expected, actual)
+    def test_var_initialization(self):
+        """test the creation of the model went right"""
+        test_args = {'updated_at': datetime(2017, 2, 12, 00, 31, 53, 331997),
+                     'id': '055',
+                     'created_at': datetime(2017, 2, 12, 00, 31, 53, 331900),
+                     'name': "AMENITY SET UP"}
+        model = Amenity(**test_args)
+        self.assertEqual(model.name, test_args['name'])
+        self.assertEqual(model.id, test_args['id'])
+        self.assertEqual(model.created_at, test_args['created_at'])
+        self.assertEqual(model.updated_at, test_args['updated_at'])
 
-    def test_doc_class(self):
-        """... documentation for the class"""
-        expected = 'Amenity class handles all application amenities'
-        actual = Amenity.__doc__
-        self.assertEqual(expected, actual)
+    def test_missing_arg(self):
+        """test creating an Amenity with no argument"""
+        new = Amenity()
+        self.assertTrue(hasattr(new, "id"))
+        self.assertTrue(hasattr(new, "created_at"))
+
+    def test_date_format(self):
+        """test the date has the right type"""
+        model = Amenity()
+        self.assertIsInstance(model.created_at, datetime)
+
+    def test_delete(self):
+        """test the deletion of an amenity"""
+        model = Amenity(name="test_amenity_delete")
+        model.save()
+        self.assertIn(model.id, storage.all("Amenity").keys())
+        storage.delete(model)
+        self.assertIsNone(storage.get("Amenity", model.id))
+
+    def test_all_amenity(self):
+        """test querying all amenities"""
+        length = storage.count("Amenity")
+        a = Amenity(name="amenity1", id="id1")
+        b = Amenity(name="amenity2", id="id2")
+        a.save()
+        b.save()
+        all_amenities = storage.all("Amenity")
+        self.assertIn(a.id, all_amenities.keys())
+        self.assertIn(b.id, all_amenities.keys())
+        self.assertEqual(storage.count("Amenity"), length + 2)
+
+    def test_get_amenity(self):
+        """test getting the amenity"""
+        a = Amenity(name="test_get")
+        id_a = a.id
+        a.save()
+        res = storage.get("Amenity", id_a)
+        self.assertEqual(a.name, res.name)
+        self.assertEqual(a.created_at.year, res.created_at.year)
+        self.assertEqual(a.created_at.month, res.created_at.month)
+        self.assertEqual(a.created_at.day, res.created_at.day)
+        self.assertEqual(a.created_at.hour, res.created_at.hour)
+        self.assertEqual(a.created_at.minute, res.created_at.minute)
+        self.assertEqual(a.created_at.second, res.created_at.second)
 
 
-class TestAmenityInstances(unittest.TestCase):
-    """testing for class instances"""
-
-    @classmethod
-    def setUpClass(cls):
-        print('\n\n.................................')
-        print('....... Testing Functions .......')
-        print('.........  Amenity  Class  .........')
-        print('.................................\n\n')
-
-    def setUp(self):
-        """initializes new amenity for testing"""
-        self.amenity = Amenity()
-
-    def test_instantiation(self):
-        """... checks if Amenity is properly instantiated"""
-        self.assertIsInstance(self.amenity, Amenity)
-
-    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
-    def test_to_string(self):
-        """... checks if BaseModel is properly casted to string"""
-        my_str = str(self.amenity)
-        my_list = ['Amenity', 'id', 'created_at']
-        actual = 0
-        for sub_str in my_list:
-            if sub_str in my_str:
-                actual += 1
-        self.assertTrue(3 == actual)
-
-    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
-    def test_instantiation_no_updated(self):
-        """... should not have updated attribute"""
-        my_str = str(self.amenity)
-        actual = 0
-        if 'updated_at' in my_str:
-            actual += 1
-        self.assertTrue(0 == actual)
-
-    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
-    def test_updated_at(self):
-        """... saves the function should add updated_at attribute"""
-        self.amenity.save()
-        actual = type(self.amenity.updated_at)
-        expected = type(datetime.now())
-        self.assertEqual(expected, actual)
-
-    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
-    def test_to_json(self):
-        """... to_json should return serializable dict object"""
-        self.amenity_json = self.amenity.to_json()
-        actual = 1
-        try:
-            serialized = json.dumps(self.amenity_json)
-        except:
-            actual = 0
-        self.assertTrue(1 == actual)
-
-    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
-    def test_json_class(self):
-        """... to_json should include class key with value Amenity"""
-        self.amenity_json = self.amenity.to_json()
-        actual = None
-        if self.amenity_json['__class__']:
-            actual = self.amenity_json['__class__']
-        expected = 'Amenity'
-        self.assertEqual(expected, actual)
-
-    def test_amenity_attribute(self):
-        """... adds the amenity attribute"""
-        self.amenity.name = "greatWifi"
-        if hasattr(self.amenity, 'name'):
-            actual = self.amenity.name
-        else:
-            actual = ''
-        expected = "greatWifi"
-        self.assertEqual(expected, actual)
-
-if __name__ == '__main__':
-    unittest.main
+if __name__ == "__main__":
+    unittest.main()
